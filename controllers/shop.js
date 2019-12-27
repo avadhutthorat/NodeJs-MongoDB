@@ -14,29 +14,18 @@ exports.getProducts = (req, res, next) => {
 };
 
 // get product details
-// exports.getProductDetails = (req, res, next) => {
-//   let { productId } = req.params;
-
-// Product.findAll({ where: { id: productId } })
-//   .then(product => {
-//     res.render("shop/product-detail", {
-//       product: product[0],
-//       path: "/products",
-//       title: product.title
-//     });
-//   })
-//   .catch(err => console.log(err));
-// alternate way to fetch single record
-//   Product.findByPk(productId)
-//     .then(product => {
-//       res.render("shop/product-detail", {
-//         product: product,
-//         path: "/products",
-//         title: product.title
-//       });
-//     })
-//     .catch(err => console.log(`failed to load the product detail - ${err}`));
-// };
+exports.getProductDetails = (req, res, next) => {
+  let { productId } = req.params;
+  Product.fetchById(productId)
+    .then(product => {
+      res.render("shop/product-detail", {
+        product: product,
+        path: "/products",
+        title: product.title
+      });
+    })
+    .catch(err => console.log(err));
+};
 
 //list products on homepage
 exports.getIndex = (req, res, next) => {
