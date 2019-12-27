@@ -1,3 +1,5 @@
+const Mongodb = require("mongodb");
+
 const Product = require("../models/product");
 
 exports.getListofProducts = (req, res, next) => {
@@ -9,20 +11,19 @@ exports.getListofProducts = (req, res, next) => {
 };
 
 // get values for editing of product
-// exports.editProduct = (req, res, next) => {
-//   let { productId } = req.params;
-//   // Product.findByPk(productId) // alternate way
-//   req.user
-//     .getProducts({ where: { id: productId } }) // get product for editing for logged in user
-//     .then(product => {
-//       res.render("admin/edit-product", {
-//         title: "Edit Product",
-//         path: "/admin/products",
-//         product: product[0]
-//       });
-//     })
-//     .catch(err => res.redirect("/"));
-// };
+exports.editProduct = (req, res, next) => {
+  let { productId } = req.params;
+  // Product.findByPk(productId) // alternate way
+  Product.fetchById(productId)
+    .then(product => {
+      res.render("admin/edit-product", {
+        title: "Edit Product",
+        path: "/admin/products",
+        product: product
+      });
+    })
+    .catch(() => res.redirect("/"));
+};
 
 // Add product
 exports.postAddProduct = (req, res, next) => {
@@ -35,20 +36,34 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 // save edited product
-// exports.postEditProduct = (req, res, next) => {
-//   console.log(req.body);
-//   let { title, imageUrl, price, description, productId } = req.body;
-//   Product.findByPk(productId)
-//     .then(product => {
-//       product.title = title;
-//       product.imageUrl = imageUrl;
-//       product.price = price;
-//       product.description = description;
-//       return product.save();
-//     })
-//     .then(response => res.redirect("/admin/products"))
-//     .catch(err => console.log(err));
-// };
+exports.postEditProduct = (req, res, next) => {
+  let { title, imageUrl, price, description, productId } = req.body;
+  const product = new Product(
+    title,
+    imageUrl,
+    price,
+    description,
+    new Mongodb.ObjectId(productId)
+  );
+  product
+    .save()
+    .then(result => {
+      console.log(result);
+      res.redirect("/admin/products");
+    })
+    .catch(err => console.log(err));
+
+  // Product.findByPk(productId)
+  //   .then(product => {
+  //     product.title = title;
+  //     product.imageUrl = imageUrl;
+  //     product.price = price;
+  //     product.description = description;
+  //     return product.save();
+  //   })
+  //   .then(response => res.redirect("/admin/products"))
+  //   .catch(err => console.log(err));
+};
 
 exports.getAdminProducts = (req, res, next) => {
   Product.fetchAll()

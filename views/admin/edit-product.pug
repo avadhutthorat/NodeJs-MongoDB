@@ -17,7 +17,7 @@ block content
             label(for="description") Description
             textarea(name="description", id="description", rows="10") #{product.description}
             button.btn(type="submit")  Update Product
-            input(type="hidden", name="productId" value=product.id)
+            input(type="hidden", name="productId" value=product._id)
             a.btn(href="/admin/products") Cancel
             
 

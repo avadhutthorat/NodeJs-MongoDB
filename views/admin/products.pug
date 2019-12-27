@@ -16,7 +16,7 @@ block content
                         h2.product__price $#{product.price}
                         p.product__description #{product.description}
                     div.card__actions
-                        - var productId = product.id
+                        - var productId = product._id
                         a.btn(href="/admin/edit-product/" + productId) Edit
                         a.btn(href="/admin/delete-product/" + productId) Delete
     else    
