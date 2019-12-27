@@ -1,11 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
-const mongoConnect = require("./utils/database");
+const mongoConnect = require("./utils/database").mongoConnect;
 
 const rootDir = require("./utils/path");
-// const adminRouter = require("./routes/admin");
-// const shopRouter = require("./routes/shop");
+const adminRouter = require("./routes/admin");
+const shopRouter = require("./routes/shop");
 const errorController = require("./controllers/error");
 
 const app = express();
@@ -22,10 +22,11 @@ app.use((req, res, next) => {
   //     next();
   //   })
   //   .catch(err => console.log(err));
+  next();
 });
 
-// app.use("/admin", adminRouter);
-// app.use(shopRouter);
+app.use("/admin", adminRouter);
+app.use(shopRouter);
 
 app.use(errorController.get404Page);
 
