@@ -1,0 +1,22 @@
+extends ../layouts/main-layout.pug
+
+block styles
+    link(rel="stylesheet", href="/css/forms.css")
+    link(rel="stylesheet", href="/css/cart.css")
+
+block content
+    if cart.length > 0
+        ul.cart__item-list
+            each item in cart
+                li.cart__item 
+                    h1 #{item.title}
+                    h2 Quantity: #{item.cartItem.quantity}
+                    form(action="/delete-item-cart", method="post")
+                        button.btn.danger(type="submit") Delete
+                        input(type="hidden", name="deleteId", value=item.id)
+        hr
+        .centered
+            form(action="/create-order", method="post")
+                button.btn(type="submit") Order Now
+    else    
+        h1 Cart is empty!!
