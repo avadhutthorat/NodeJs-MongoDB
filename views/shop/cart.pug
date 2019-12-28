@@ -10,10 +10,10 @@ block content
             each item in cart
                 li.cart__item 
                     h1 #{item.title}
-                    h2 Quantity: #{item.cartItem.quantity}
+                    h2 Quantity: #{item.quantity}
                     form(action="/delete-item-cart", method="post")
                         button.btn.danger(type="submit") Delete
-                        input(type="hidden", name="deleteId", value=item.id)
+                        input(type="hidden", name="deleteId", value=item._id)
         hr
         .centered
             form(action="/create-order", method="post")
