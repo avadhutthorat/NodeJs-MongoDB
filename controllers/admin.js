@@ -55,14 +55,10 @@ exports.getAdminProducts = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-// // delete product
-// exports.deleteProduct = (req, res, next) => {
-//   let { productId } = req.params;
-//   Product.destroy({
-//     where: {
-//       id: productId
-//     }
-//   })
-//     .then(() => res.redirect("/admin/products"))
-//     .catch(err => console.log(`error while deleting ${err}`));
-// };
+// delete product
+exports.deleteProduct = (req, res, next) => {
+  let { productId } = req.params;
+  Product.deleteById(productId)
+    .then(() => res.redirect("/admin/products"))
+    .catch(err => console.log(`error while deleting ${err}`));
+};
