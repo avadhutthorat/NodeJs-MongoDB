@@ -76,19 +76,18 @@ exports.deleteProductFromCart = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-// // get all orders to show on page
-// exports.getOrders = (req, res, next) => {
-//   req.user
-//     .getOrders({ include: ["products"] })
-//     .then(orders => {
-//       console.log(orders);
-//       res.render("shop/orders", {
-//         title: "My Orders",
-//         orders: orders
-//       });
-//     })
-//     .catch(err => console.log(err));
-// };
+// get all orders to show on page
+exports.getOrders = (req, res, next) => {
+  req.user
+    .getOrders()
+    .then(orders => {
+      res.render("shop/orders", {
+        title: "My Orders",
+        orders: orders
+      });
+    })
+    .catch(err => console.log(err));
+};
 
 // Create order outof cartItems
 exports.postCreateOrder = (req, res, next) => {
