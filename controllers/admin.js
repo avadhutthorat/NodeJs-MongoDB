@@ -26,7 +26,14 @@ exports.editProduct = (req, res, next) => {
 // Add product
 exports.postAddProduct = (req, res, next) => {
   let { title, imageUrl, price, description } = req.body;
-  const product = new Product(title, price, description, imageUrl);
+  const product = new Product(
+    title,
+    price,
+    description,
+    imageUrl,
+    null,
+    req.user._id
+  );
   product
     .save()
     .then(() => res.redirect("/admin/products"))
