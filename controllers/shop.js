@@ -90,32 +90,14 @@ exports.deleteProductFromCart = (req, res, next) => {
 //     .catch(err => console.log(err));
 // };
 
-// // Create order outof cartItems
-// exports.postCreateOrder = (req, res, next) => {
-//   let fetchedCart;
-//   req.user
-//     .getCart()
-//     .then(cart => {
-//       fetchedCart = cart;
-//       return cart.getProducts();
-//     })
-//     .then(products => {
-//       return req.user
-//         .createOrder()
-//         .then(order => {
-//           order.addProducts(
-//             products.map(product => {
-//               product.orderItem = { quantity: product.cartItem.quantity };
-//               return product;
-//             })
-//           );
-//         })
-//         .catch(err => console.log(err));
-//     })
-//     .then(() => fetchedCart.setProducts(null))
-//     .then(() => res.redirect("/orders"))
-//     .catch(err => console.log(`error while create order - ${err}`));
-// };
+// Create order outof cartItems
+exports.postCreateOrder = (req, res, next) => {
+  let fetchedCart;
+  req.user
+    .orderCartItems()
+    .then(() => res.redirect("/orders"))
+    .catch(err => console.log(`error while create order - ${err}`));
+};
 
 // // checkout router
 // exports.checkout = (req, res, next) => {

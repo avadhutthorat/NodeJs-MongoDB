@@ -18,6 +18,17 @@ class User {
       .catch(() => console.log("User cant be created"));
   }
 
+  static findUserById(userId) {
+    const db = getDb();
+    return db
+      .collection("users")
+      .findOne({ _id: new Mongodb.ObjectId(userId) }) // .find().next()
+      .then(result => {
+        return result;
+      })
+      .catch(() => console.log("User not found"));
+  }
+
   addToCart(product) {
     const db = getDb();
     // return and index of product if exists otherwise -1
@@ -84,15 +95,21 @@ class User {
       .then(res => res)
       .catch(err => console.log(err));
   }
-  static findUserById(userId) {
-    const db = getDb();
+
+  orderCartItems() {
+    let db = getDb();
     return db
-      .collection("users")
-      .findOne({ _id: new Mongodb.ObjectId(userId) }) // .find().next()
-      .then(result => {
-        return result;
-      })
-      .catch(() => console.log("User not found"));
+      .collection("orders")
+      .insertOne(this.cart)
+      .then(() => {
+        this.cart = { items: [] };
+        return db
+          .collection("users")
+          .updateOne(
+            { _id: new Mongodb.ObjectId(this._id) },
+            { $set: { cart: { items: [] } } }
+          );
+      });
   }
 }
 
