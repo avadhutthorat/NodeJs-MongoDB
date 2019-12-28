@@ -1,5 +1,3 @@
-const Mongodb = require("mongodb");
-
 const Product = require("../models/product");
 
 exports.getListofProducts = (req, res, next) => {
@@ -38,31 +36,11 @@ exports.postAddProduct = (req, res, next) => {
 // save edited product
 exports.postEditProduct = (req, res, next) => {
   let { title, imageUrl, price, description, productId } = req.body;
-  const product = new Product(
-    title,
-    imageUrl,
-    price,
-    description,
-    new Mongodb.ObjectId(productId)
-  );
+  const product = new Product(title, imageUrl, price, description, productId);
   product
     .save()
-    .then(result => {
-      console.log(result);
-      res.redirect("/admin/products");
-    })
+    .then(result => res.redirect("/admin/products"))
     .catch(err => console.log(err));
-
-  // Product.findByPk(productId)
-  //   .then(product => {
-  //     product.title = title;
-  //     product.imageUrl = imageUrl;
-  //     product.price = price;
-  //     product.description = description;
-  //     return product.save();
-  //   })
-  //   .then(response => res.redirect("/admin/products"))
-  //   .catch(err => console.log(err));
 };
 
 exports.getAdminProducts = (req, res, next) => {
