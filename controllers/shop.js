@@ -45,6 +45,7 @@ exports.getCart = (req, res, next) => {
   req.user
     .getCartItems()
     .then(products => {
+      console.log("in cart");
       res.render("shop/cart", {
         title: "My Cart",
         path: "/cart",
@@ -60,10 +61,9 @@ exports.postCart = (req, res, next) => {
   let { productId } = req.body;
   Product.fetchById(productId)
     .then(product => {
-      console.log(`Product info - ${product}`);
       return req.user.addToCart(product);
     })
-    .then(result => console.log(`Added to cart`))
+    .then(result => res.redirect("/cart"))
     .catch();
 };
 

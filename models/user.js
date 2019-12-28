@@ -45,7 +45,6 @@ class User {
         { $set: { cart: updatedCart } }
       )
       .then(res => {
-        console.log(`in addtocart model - ${res}`);
         return res;
       })
       .catch(err => console.log(err));
@@ -77,7 +76,6 @@ class User {
       .collection("users")
       .findOne({ _id: new Mongodb.ObjectId(userId) }) // .find().next()
       .then(result => {
-        console.log("user found");
         return result;
       })
       .catch(() => console.log("User not found"));
