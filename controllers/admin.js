@@ -12,7 +12,7 @@ exports.getListofProducts = (req, res, next) => {
 exports.editProduct = (req, res, next) => {
   let { productId } = req.params;
   // Product.findByPk(productId) // alternate way
-  Product.fetchById(productId)
+  Product.findById(productId)
     .then(product => {
       res.render("admin/edit-product", {
         title: "Edit Product",
@@ -41,15 +41,20 @@ exports.postAddProduct = (req, res, next) => {
 // save edited product
 exports.postEditProduct = (req, res, next) => {
   let { title, imageUrl, price, description, productId } = req.body;
-  const product = new Product(title, price, description, imageUrl, productId);
-  product
-    .save()
+  Product.findById(productId)
+    .then(product => {
+      product.title = title;
+      product.price = price;
+      product.imageUrl = imageUrl;
+      product.description = description;
+      return product.save();
+    })
     .then(result => res.redirect("/admin/products"))
     .catch(err => console.log(err));
 };
 
 exports.getAdminProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then(products => {
       res.render("admin/products", {
         products: products,
