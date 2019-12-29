@@ -56,7 +56,10 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getAdminProducts = (req, res, next) => {
   Product.find()
+    //.select("price") // will include and exclude(-price) the properties
+    //.populate("userId", "email") // will add document for given path
     .then(products => {
+      console.log(products);
       res.render("admin/products", {
         products: products,
         title: "Admin Product",
