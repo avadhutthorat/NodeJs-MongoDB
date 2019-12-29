@@ -68,7 +68,10 @@ exports.getAdminProducts = (req, res, next) => {
 // delete product
 exports.deleteProduct = (req, res, next) => {
   let { productId } = req.params;
-  Product.deleteById(productId)
-    .then(() => res.redirect("/admin/products"))
+  Product.findByIdAndRemove(productId)
+    .then(result => {
+      console.log(`deleted item --- ${result}`);
+      res.redirect("/admin/products");
+    })
     .catch(err => console.log(`error while deleting ${err}`));
 };
