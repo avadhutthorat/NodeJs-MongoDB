@@ -30,7 +30,7 @@ exports.getProducts = (req, res, next) => {
 // get product details
 exports.getProductDetails = (req, res, next) => {
   let { productId } = req.params;
-  Product.fetchById(productId)
+  Product.findById(productId)
     .then(product => {
       res.render("shop/product-detail", {
         product: product,
