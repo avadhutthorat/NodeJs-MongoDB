@@ -60,7 +60,7 @@ exports.getCart = (req, res, next) => {
 // Adding product to cart
 exports.postCart = (req, res, next) => {
   let { productId } = req.body;
-  Product.fetchById(productId)
+  Product.findById(productId)
     .then(product => {
       return req.user.addToCart(product);
     })
