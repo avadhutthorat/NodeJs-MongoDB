@@ -1,8 +1,22 @@
 const Product = require("../models/product");
 
+//list products on homepage
+exports.getIndex = (req, res, next) => {
+  Product.find()
+    .then(products => {
+      console.log(products);
+      res.render("shop/index", {
+        products: products,
+        title: "Shop",
+        path: "/index"
+      });
+    })
+    .catch(err => console.log(`Unable to fetch data from database - ${err}`));
+};
+
 // list products on product tab
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then(products => {
       res.render("shop/product-list", {
         products: products,
@@ -25,19 +39,6 @@ exports.getProductDetails = (req, res, next) => {
       });
     })
     .catch(err => console.log(err));
-};
-
-//list products on homepage
-exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
-    .then(products => {
-      res.render("shop/index", {
-        products: products,
-        title: "Shop",
-        path: "/index"
-      });
-    })
-    .catch(err => console.log(`Unable to fetch data from database - ${err}`));
 };
 
 // get products added to cart
