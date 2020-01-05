@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const mongoose = require("mongoose");
+const session = require("express-session");
 
 const rootDir = require("./utils/path");
 const adminRouter = require("./routes/admin");
@@ -18,7 +19,13 @@ app.set("views", "views"); // will look for view in views folder
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(
+  session({
+    secret: "My secret key should be long",
+    resave: false,
+    saveUninitialized: false
+  })
+);
 app.use((req, res, next) => {
   User.findById("5e08644eb95cd76a64cc2ced")
     .then(user => {
@@ -27,7 +34,6 @@ app.use((req, res, next) => {
     })
     .catch(err => console.log(err));
 });
-
 app.use(authRouter);
 app.use("/admin", adminRouter);
 app.use(shopRouter);
