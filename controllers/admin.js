@@ -4,7 +4,8 @@ exports.getListofProducts = (req, res, next) => {
   // res.sendFile(path.join(rootDir, "views", "add-product.html"));
   res.render("admin/add-product", {
     title: "Add Products",
-    path: "/admin/add-product"
+    path: "/admin/add-product",
+    isAuthenticated: req.isLoggedIn
   });
 };
 
@@ -17,7 +18,8 @@ exports.editProduct = (req, res, next) => {
       res.render("admin/edit-product", {
         title: "Edit Product",
         path: "/admin/products",
-        product: product
+        product: product,
+        isAuthenticated: req.isLoggedIn
       });
     })
     .catch(() => res.redirect("/"));
@@ -63,7 +65,8 @@ exports.getAdminProducts = (req, res, next) => {
       res.render("admin/products", {
         products: products,
         title: "Admin Product",
-        path: "/admin/products"
+        path: "/admin/products",
+        isAuthenticated: req.isLoggedIn
       });
     })
     .catch(err => console.log(err));
