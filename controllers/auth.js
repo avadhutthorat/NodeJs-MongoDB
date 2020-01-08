@@ -10,6 +10,23 @@ exports.getSignup = (req, res, next) => {
 
 exports.postSignup = (req, res, next) => {
   console.log(req.body);
+  const { email, password, confirmpassword } = req.body;
+  User.findOne({ email: email })
+    .then(userInfo => {
+      if (userInfo) {
+        return res.redirect("/signup");
+      }
+
+      const user = new User({
+        email: email,
+        password: password,
+        cart: { items: [] }
+      });
+      return user.save();
+    })
+    .then(result => {
+      res.redirect("/login");
+    });
 };
 exports.getLogin = (req, res, next) => {
   console.log(req.session);

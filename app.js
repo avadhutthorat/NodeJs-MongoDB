@@ -56,20 +56,7 @@ mongoose
       useNewUrlParser: true
     }
   )
-  .then(result => {
-    User.findOne().then(foundUser => {
-      if (!foundUser) {
-        const user = new User({
-          name: "Avadhut",
-          email: "avadhut@test.com",
-          cart: {
-            items: []
-          }
-        });
-        user.save();
-      }
-    });
-
+  .then(() => {
     app.listen(3000);
   })
   .catch(err => console.log(`Not connected to database - ${err}`));
