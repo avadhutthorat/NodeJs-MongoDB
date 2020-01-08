@@ -5,7 +5,7 @@ exports.getListofProducts = (req, res, next) => {
   res.render("admin/add-product", {
     title: "Add Products",
     path: "/admin/add-product",
-    isAuthenticated: req.isLoggedIn
+    isAuthenticated: req.session.isLoggedIn
   });
 };
 
@@ -19,7 +19,7 @@ exports.editProduct = (req, res, next) => {
         title: "Edit Product",
         path: "/admin/products",
         product: product,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(() => res.redirect("/"));
@@ -33,7 +33,7 @@ exports.postAddProduct = (req, res, next) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
-    userId: req.user // mongoose will automatically pick id from the user object
+    userId: req.session.user // mongoose will automatically pick id from the user object
   });
   product
     .save()
@@ -61,12 +61,11 @@ exports.getAdminProducts = (req, res, next) => {
     //.select("price") // will include and exclude(-price) the properties
     //.populate("userId", "email") // will add document for given path
     .then(products => {
-      console.log(products);
       res.render("admin/products", {
         products: products,
         title: "Admin Product",
         path: "/admin/products",
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -77,7 +76,6 @@ exports.deleteProduct = (req, res, next) => {
   let { productId } = req.params;
   Product.findByIdAndRemove(productId)
     .then(result => {
-      console.log(`deleted item --- ${result}`);
       res.redirect("/admin/products");
     })
     .catch(err => console.log(`error while deleting ${err}`));

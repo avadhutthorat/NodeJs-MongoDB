@@ -27,8 +27,12 @@ html(lang="en")
                         li.main-header__item
                             a(href="/admin/products", class=(path ==='/admin/products' ? 'active' : '')) Admin Products
                 ul.main-header__item-list
-                    li.main-header__item
-                        a(href="/login" class=(path === '/login'? 'active' : '')) login   
+                    if isAuthenticated
+                        li.main-header__item
+                            a(href="/logout") logout
+                    else
+                        li.main-header__item
+                            a(href="/login" class=(path === '/login'? 'active' : '')) login
         nav.mobile-nav
             ul.mobile-nav__item-list
                 li.mobile-nav__item

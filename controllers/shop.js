@@ -9,7 +9,7 @@ exports.getIndex = (req, res, next) => {
         products: products,
         title: "Shop",
         path: "/index",
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(`Unable to fetch data from database - ${err}`));
@@ -23,7 +23,7 @@ exports.getProducts = (req, res, next) => {
         products: products,
         title: "Products",
         path: "/products",
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(`Unable to fetch data from database - ${err}`));
@@ -38,7 +38,7 @@ exports.getProductDetails = (req, res, next) => {
         product: product,
         path: "/products",
         title: product.title,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -46,7 +46,7 @@ exports.getProductDetails = (req, res, next) => {
 
 // get products added to cart
 exports.getCart = (req, res, next) => {
-  req.user
+  req.session.userInfo
     .populate("cart.items.productId")
     .execPopulate()
     .then(user => {
@@ -56,7 +56,7 @@ exports.getCart = (req, res, next) => {
         path: "/cart",
         cart: products,
         totalPrice: "333",
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -67,7 +67,7 @@ exports.postCart = (req, res, next) => {
   let { productId } = req.body;
   Product.findById(productId)
     .then(product => {
-      return req.user.addToCart(product);
+      return req.session.user.addToCart(product);
     })
     .then(result => res.redirect("/cart"))
     .catch();
@@ -76,7 +76,7 @@ exports.postCart = (req, res, next) => {
 // Deleting product from cart
 exports.deleteProductFromCart = (req, res, next) => {
   let { deleteId } = req.body;
-  req.user
+  req.session.user
     .removeFromCart(deleteId)
     .then(() => res.redirect("/cart"))
     .catch(err => console.log(err));
@@ -84,12 +84,12 @@ exports.deleteProductFromCart = (req, res, next) => {
 
 // get all orders to show on page
 exports.getOrders = (req, res, next) => {
-  Order.find({ "user.userId": req.user._id })
+  Order.find({ "user.userId": req.session.user._id })
     .then(orders => {
       res.render("shop/orders", {
         title: "My Orders",
         orders: orders,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -98,7 +98,7 @@ exports.getOrders = (req, res, next) => {
 // Create order outof cartItems
 exports.postCreateOrder = (req, res, next) => {
   let items = [];
-  req.user
+  req.session.user
     .populate("cart.items.productId")
     .execPopulate()
     .then(user => {
@@ -114,8 +114,8 @@ exports.postCreateOrder = (req, res, next) => {
     .then(prodArray => {
       const order = new Order({
         user: {
-          name: req.user.name,
-          userId: req.user
+          name: req.session.user.name,
+          userId: req.session.user
         },
         products: [...items]
       });
@@ -123,7 +123,7 @@ exports.postCreateOrder = (req, res, next) => {
       return order.save();
     })
     .then(() => {
-      return req.user.clearCart();
+      return req.session.user.clearCart();
     })
     .then(() => res.redirect("/orders"))
     .catch(err => console.log(`error while create order - ${err}`));

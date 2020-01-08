@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongodbStore = require("connect-mongodb-session")(session);
 
 const rootDir = require("./utils/path");
 const adminRouter = require("./routes/admin");
@@ -14,6 +15,11 @@ const User = require("./models/user");
 
 const app = express();
 
+const store = new MongodbStore({
+  uri: "mongodb+srv://avadhut:fMyI2X3KLZVx43IR@cluster0-wnwz9.mongodb.net/shop",
+  collection: "sessions"
+});
+
 app.set("view engine", "pug"); // configuring pug for express
 app.set("views", "views"); // will look for view in views folder
 
@@ -23,17 +29,18 @@ app.use(
   session({
     secret: "My secret key should be long",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: store
   })
 );
-app.use((req, res, next) => {
-  User.findById("5e08644eb95cd76a64cc2ced")
-    .then(user => {
-      req.user = user;
-      next();
-    })
-    .catch(err => console.log(err));
-});
+// app.use((req, res, next) => {
+//   User.findById("5e08644eb95cd76a64cc2ced")
+//     .then(user => {
+//       req.user = user;
+//       next();
+//     })
+//     .catch(err => console.log(err));
+// });
 app.use(authRouter);
 app.use("/admin", adminRouter);
 app.use(shopRouter);
@@ -64,4 +71,4 @@ mongoose
 
     app.listen(3000);
   })
-  .catch(() => console.log(`Not connected to database`));
+  .catch(err => console.log(`Not connected to database - ${err}`));
