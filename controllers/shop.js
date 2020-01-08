@@ -46,7 +46,7 @@ exports.getProductDetails = (req, res, next) => {
 
 // get products added to cart
 exports.getCart = (req, res, next) => {
-  req.session.userInfo
+  req.user
     .populate("cart.items.productId")
     .execPopulate()
     .then(user => {
@@ -67,7 +67,7 @@ exports.postCart = (req, res, next) => {
   let { productId } = req.body;
   Product.findById(productId)
     .then(product => {
-      return req.session.user.addToCart(product);
+      return req.user.addToCart(product);
     })
     .then(result => res.redirect("/cart"))
     .catch();
@@ -76,7 +76,7 @@ exports.postCart = (req, res, next) => {
 // Deleting product from cart
 exports.deleteProductFromCart = (req, res, next) => {
   let { deleteId } = req.body;
-  req.session.user
+  req.user
     .removeFromCart(deleteId)
     .then(() => res.redirect("/cart"))
     .catch(err => console.log(err));
@@ -84,7 +84,7 @@ exports.deleteProductFromCart = (req, res, next) => {
 
 // get all orders to show on page
 exports.getOrders = (req, res, next) => {
-  Order.find({ "user.userId": req.session.user._id })
+  Order.find({ "user.userId": req.user._id })
     .then(orders => {
       res.render("shop/orders", {
         title: "My Orders",
@@ -98,7 +98,7 @@ exports.getOrders = (req, res, next) => {
 // Create order outof cartItems
 exports.postCreateOrder = (req, res, next) => {
   let items = [];
-  req.session.user
+  req.user
     .populate("cart.items.productId")
     .execPopulate()
     .then(user => {
@@ -114,8 +114,8 @@ exports.postCreateOrder = (req, res, next) => {
     .then(prodArray => {
       const order = new Order({
         user: {
-          name: req.session.user.name,
-          userId: req.session.user
+          name: req.user.name,
+          userId: req.user
         },
         products: [...items]
       });
@@ -123,7 +123,7 @@ exports.postCreateOrder = (req, res, next) => {
       return order.save();
     })
     .then(() => {
-      return req.session.user.clearCart();
+      return req.user.clearCart();
     })
     .then(() => res.redirect("/orders"))
     .catch(err => console.log(`error while create order - ${err}`));

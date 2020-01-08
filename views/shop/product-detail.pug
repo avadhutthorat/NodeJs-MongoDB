@@ -11,10 +11,11 @@ block content
         img.image(src=url, alt="Book")
         h2 $#{product.price}
         p #{product.description}
-        form(action="/cart", method="post")
-            - var productId = product._id
-            button.btn(type="submit") Add to Cart
-            input(type="hidden", name="productId" value=productId)
+        if isAuthenticated
+            form(action="/cart", method="post")
+                - var productId = product._id
+                button.btn(type="submit") Add to Cart
+                input(type="hidden", name="productId" value=productId)
     
     
 

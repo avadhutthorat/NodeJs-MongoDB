@@ -33,7 +33,7 @@ exports.postAddProduct = (req, res, next) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
-    userId: req.session.user // mongoose will automatically pick id from the user object
+    userId: req.user // mongoose will automatically pick id from the user object
   });
   product
     .save()
