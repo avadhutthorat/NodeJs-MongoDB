@@ -109,6 +109,7 @@ exports.postCreateOrder = (req, res, next) => {
     .then(prodArray => {
       const order = new Order({
         user: {
+          email: req.user.email,
           userId: req.user
         },
         products: [...items]

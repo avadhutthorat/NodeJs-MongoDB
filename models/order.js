@@ -10,6 +10,10 @@ const orderSchema = new Schema({
     }
   ],
   user: {
+    email: {
+      type: String,
+      required: true
+    },
     userId: {
       type: mongoose.Types.ObjectId,
       ref: "User",
