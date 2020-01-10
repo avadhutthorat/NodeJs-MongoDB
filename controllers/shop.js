@@ -8,8 +8,7 @@ exports.getIndex = (req, res, next) => {
       res.render("shop/index", {
         products: products,
         title: "Shop",
-        path: "/index",
-        isAuthenticated: req.session.isLoggedIn
+        path: "/index"
       });
     })
     .catch(err => console.log(`Unable to fetch data from database - ${err}`));
@@ -22,8 +21,7 @@ exports.getProducts = (req, res, next) => {
       res.render("shop/product-list", {
         products: products,
         title: "Products",
-        path: "/products",
-        isAuthenticated: req.session.isLoggedIn
+        path: "/products"
       });
     })
     .catch(err => console.log(`Unable to fetch data from database - ${err}`));
@@ -37,8 +35,7 @@ exports.getProductDetails = (req, res, next) => {
       res.render("shop/product-detail", {
         product: product,
         path: "/products",
-        title: product.title,
-        isAuthenticated: req.session.isLoggedIn
+        title: product.title
       });
     })
     .catch(err => console.log(err));
@@ -55,8 +52,7 @@ exports.getCart = (req, res, next) => {
         title: "My Cart",
         path: "/cart",
         cart: products,
-        totalPrice: "333",
-        isAuthenticated: req.session.isLoggedIn
+        totalPrice: "333"
       });
     })
     .catch(err => console.log(err));
@@ -88,8 +84,7 @@ exports.getOrders = (req, res, next) => {
     .then(orders => {
       res.render("shop/orders", {
         title: "My Orders",
-        orders: orders,
-        isAuthenticated: req.session.isLoggedIn
+        orders: orders
       });
     })
     .catch(err => console.log(err));
@@ -114,7 +109,6 @@ exports.postCreateOrder = (req, res, next) => {
     .then(prodArray => {
       const order = new Order({
         user: {
-          name: req.user.name,
           userId: req.user
         },
         products: [...items]

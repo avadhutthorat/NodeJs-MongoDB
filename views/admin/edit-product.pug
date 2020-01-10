@@ -19,5 +19,6 @@ block content
             button.btn(type="submit")  Update Product
             input(type="hidden", name="productId" value=product._id)
             a.btn(href="/admin/products") Cancel
+            input(type="hidden", name="_csrf" value=csrfToken)
             
 
