@@ -5,9 +5,11 @@ block styles
     link(rel="stylesheet", href="/css/auth.css")
 
 block content
+    if errorMessage
+        div.user-message.user-message--error #{errorMessage}
     form.login-form(action="/signup", method="POST")
         div.form-control
-            label(for="email") email
+            label(for="email") Email
             input(type="email", name="email", id="email")
         div.form-control
             label(for="password") Password
