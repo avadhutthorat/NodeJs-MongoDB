@@ -1,6 +1,11 @@
 const bcrypt = require("bcryptjs");
+const sgMail = require("@sendgrid/mail");
 
 const User = require("../models/user");
+
+sgMail.setApiKey(
+  "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"
+);
 
 exports.getSignup = (req, res, next) => {
   const message = req.flash("error")[0];
@@ -32,6 +37,14 @@ exports.postSignup = (req, res, next) => {
         })
         .then(result => {
           res.redirect("/login");
+          const msg = {
+            to: email,
+            from: "shop@avadhutthorat.io",
+            subject: "Welcome to avadhutthorat.io",
+            text: "Successfully signed up!",
+            html: "<strong>Jai Shri Ram</strong>"
+          };
+          sgMail.send(msg);
         });
     })
     .catch(err => console.log(err));
