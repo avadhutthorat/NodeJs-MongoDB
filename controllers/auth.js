@@ -37,7 +37,8 @@ exports.getLogin = (req, res, next) => {
   console.log(req.session);
   res.render("auth/login", {
     path: "/login",
-    title: "Log In"
+    title: "Log In",
+    errorMessage: req.flash("error")
   });
 };
 
@@ -45,7 +46,10 @@ exports.postLogin = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email: email })
     .then(user => {
-      if (!user) return res.redirect("/login");
+      if (!user) {
+        req.flash("error", "Incorrect email or password");
+        return res.redirect("/login");
+      }
       bcrypt.compare(password, user.password).then(doMatch => {
         if (doMatch) {
           req.session.user = user;
