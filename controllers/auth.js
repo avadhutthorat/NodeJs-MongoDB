@@ -1,10 +1,21 @@
 const bcrypt = require("bcryptjs");
 const sgMail = require("@sendgrid/mail");
+const nodemailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport");
 
 const User = require("../models/user");
 
-sgMail.setApiKey(
-  "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"
+// sgMail.setApiKey(
+//   "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"
+// );
+
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key:
+        "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"
+    }
+  })
 );
 
 exports.getSignup = (req, res, next) => {
@@ -37,21 +48,27 @@ exports.postSignup = (req, res, next) => {
         })
         .then(result => {
           res.redirect("/login");
-          const msg = {
+          // const msg = {
+          //   to: email,
+          //   from: "shop@avadhutthorat.io",
+          //   subject: "Welcome to avadhutthorat.io",
+          //   text: "Successfully signed up!",
+          //   html: "<strong>Jai Shri Ram</strong>"
+          // };
+          // sgMail.send(msg);
+          return transporter.sendMail({
             to: email,
-            from: "shop@avadhutthorat.io",
-            subject: "Welcome to avadhutthorat.io",
-            text: "Successfully signed up!",
-            html: "<strong>Jai Shri Ram</strong>"
-          };
-          sgMail.send(msg);
-        });
+            from: "shop@node-complete.com",
+            subject: "Signup succeeded!",
+            html: "<h1>You successfully signed up!</h1>"
+          });
+        })
+        .then(err => console.log(err));
     })
     .catch(err => console.log(err));
 };
 exports.getLogin = (req, res, next) => {
   const message = req.flash("error")[0];
-  console.log(req.session);
   res.render("auth/login", {
     path: "/login",
     title: "Log In",
@@ -72,7 +89,6 @@ exports.postLogin = (req, res, next) => {
           req.session.user = user;
           req.session.isLoggedIn = true;
           return req.session.save(err => {
-            console.log(err);
             res.redirect("/");
           });
         }
@@ -86,5 +102,14 @@ exports.getLogout = (req, res, next) => {
   req.session.destroy(err => {
     console.log(err);
     res.redirect("/login");
+  });
+};
+
+exports.passwordReset = (req, res, next) => {
+  const message = req.flash("error")[0];
+  res.render("auth/reset", {
+    path: "/reset",
+    title: "Reset Password",
+    errorMessage: message
   });
 };

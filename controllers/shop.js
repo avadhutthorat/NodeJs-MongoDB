@@ -1,14 +1,30 @@
 const Product = require("../models/product");
 const Order = require("../models/order");
 
+const ITEMS_PER_PAGE = 2;
 //list products on homepage
 exports.getIndex = (req, res, next) => {
+  const page = req.query.page;
+  let ProductCount;
   Product.find()
+    .count()
+    .then(prodCount => {
+      ProductCount = prodCount;
+      return Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
     .then(products => {
       res.render("shop/index", {
         products: products,
         title: "Shop",
-        path: "/index"
+        path: "/index",
+        ProductCount: ProductCount,
+        hasNextPage: ITEMS_PER_PAGE * page < ProductCount,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(ProductCount / ITEMS_PER_PAGE)
       });
     })
     .catch(err => console.log(`Unable to fetch data from database - ${err}`));

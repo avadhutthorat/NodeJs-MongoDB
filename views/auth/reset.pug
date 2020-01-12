@@ -11,10 +11,7 @@ block content
         div.form-control
             label(for="email") Email
             input(type="email", name="email", id="email")
-        div.form-control
-            label(for="password") Password
-            input(type="password", name="password", id="password")
-        button.btn(type="submit") Login
+        button.btn(type="submit") Reset Password
             input(type="hidden", name="_csrf" value=csrfToken)
-        a.centered(href="/password-reset") Reset Password
+    
 
